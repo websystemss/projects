@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Web System</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
+    body {
+      margin: 0;
+      font-family: 'Montserrat', sans-serif;
+      background: skyblue;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    header {
+      text-align: center;
+      margin: 30px 0;
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      color: #2c3e50;
+      margin: 0;
+    }
+
+    .container {
+      display: flex;
+      justify-content: space-between;
+      width: 90%;
+      max-width: 1000px;
+      background: white;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      padding: 40px;
+    }
+
+    .left-side {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .left-side h2 {
+      font-size: 2rem;
+      margin: 0;
+      color: #333;
+    }
+
+    .left-side h3 {
+      font-size: 1.5rem;
+      margin: 0;
+      color: #555;
+    }
+
+    .project-description {
+      font-size: 1rem;
+      color: #666;
+      margin-top: 8px;
+      font-style: italic;
+    }
+
+    .view-btn {
+      margin-top: 10px;
+      background-color: #0092FF;
+      color: white;
+      border: none;
+      padding: 12px 28px;
+      border-radius: 25px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+    .view-btn:hover {
+      background-color: #0078d4;
+      transform: scale(1.05);
+    }
+
+    .activity-cards {
+      display: none;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin-top: 20px;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.6s cubic-bezier(.4,1,.4,1), transform 0.6s cubic-bezier(.4,1,.4,1);
+    }
+
+    .activity-cards.show {
+      display: flex;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .card {
+      width: 150px;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      cursor: pointer;
+      text-align: center;
+      transition: transform 0.3s cubic-bezier(.25,.8,.25,1), box-shadow 0.3s;
+      background-color: #fff;
+    }
+
+    .card img {
+      width: 100%;
+      height: 100px;
+      object-fit: cover;
+    }
+
+    .card p {
+      margin: 10px 0;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .card:hover {
+      transform: scale(1.08) translateY(-8px) rotate(-2deg);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.28);
+      z-index: 2;
+    }
+
+    .right-side {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+
+    .moving-image {
+      width: 250px;
+      height: 250px;
+      border-radius: 50%;
+      overflow: hidden;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      transition: transform 0.1s ease-out;
+      position: relative;
+    }
+
+    .moving-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+
+    .tutorial-popup {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background-color: rgba(0,0,0,0.6);
+      z-index: 999;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .popup-content {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      width: 80%;
+      max-width: 500px;
+      position: relative;
+      animation: fadeIn 0.4s ease;
+    }
+
+    .popup-content h2 {
+      margin-top: 0;
+      color: #333;
+    }
+
+    .popup-content p {
+      font-size: 1rem;
+      color: #555;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 10px; right: 20px;
+      font-size: 24px;
+      color: #999;
+      cursor: pointer;
+    }
+
+    .popup-link-btn {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #007BFF;
+      color: white;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+    }
+
+    .popup-link-btn:hover {
+      background-color: #0056b3;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+
+      .right-side {
+        margin-top: 30px;
+      }
+
+      .activity-cards {
+        justify-content: center;
+      }
+    }
+  </style>
+
+<style>
+  .module-fab {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background-color: #007BFF;
+    color: white;
+    padding: 10px 18px;
+    border-radius: 50px;
+    font-size: 1rem;
+    font-weight: bold;
+    text-decoration: none;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    animation: bounce 2s infinite;
+    z-index: 1000;
+  }
+
+  .module-fab:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+  }
+
+  .module-fab span {
+    font-size: 1.5rem;
+  }
+
+  @keyframes bounce {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-5px);
+    }
+  }
+</style>
+
+  <style>
+    /* Dark mode styling */
+    body.dark-mode {
+      background-color: #121212;
+      color: #f0f0f0;
+    }
+
+    body.dark-mode header h1,
+    body.dark-mode .left-side h2,
+    body.dark-mode .left-side h3,
+    body.dark-mode .project-description,
+    body.dark-mode .card p,
+    body.dark-mode .popup-content h2,
+    body.dark-mode .popup-content p,
+    body.dark-mode .footer {
+      color: #fff !important;
+    }
+
+    body.dark-mode .container {
+      background-color: #1e1e1e;
+    }
+
+    body.dark-mode .card {
+      background-color: #2a2a2a;
+      color: #fff;
+    }
+
+    body.dark-mode .popup-content {
+      background-color: #2e2e2e;
+      color: #fff;
+    }
+
+    #darkModeToggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #333;
+      color: #fff;
+      border: none;
+      border-radius: 20px;
+      padding: 10px 15px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      z-index: 1000;
+    }
+
+    #darkModeToggle:hover {
+      background-color: #555;
+    }
+
+    .footer {
+      margin-top: 60px;
+      padding: 20px;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #888;
+    }
+
+    .footer a {
+      color: #007bff;
+      text-decoration: none;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
+
+  <!-- AOS Library -->
+  <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+</head>
+
+<body>
+  <button id="darkModeToggle">🌙 Dark Mode</button>
+
+
+  <main style="margin-top: 100px;">
+    <header data-aos="fade-down">
+      <h1>Welcome to My Web Page</h1>
+    </header>
+
+    <div class="container" data-aos="fade-up">
+      <div class="left-side">
+        <h2>Hi there,</h2>
+        <h3>I’m Johncarlo</h3>
+        <p class="project-description">Click the view activity to see our projects in Web System and Technology in this whole sem</p>
+        <button class="view-btn" id="toggleButton">View My Activity</button>
+
+        <div class="activity-cards" id="activityButtons">
+          <div class="card" data-aos="zoom-in" data-target="tutorial1">
+            <img src="act1.jpg" alt="Mountain View">
+            <p>Activity 1</p>
+          </div>
+          <div class="card" data-aos="zoom-in" data-target="tutorial2">
+            <img src="act2.jpg" alt="Beach">
+            <p>Activity 2</p>
+          </div>
+          <div class="card" data-aos="zoom-in" data-target="tutorial3">
+            <img src="act3.jpg" alt="Desert">
+            <p>Activity 3</p>
+          </div>
+          <div class="card" data-aos="zoom-in" data-target="tutorial4">
+            <img src="act4.jpg" alt="City">
+            <p>Activity 4</p>
+          </div>
+          <div class="card" data-aos="zoom-in" data-target="tutorial5">
+            <img src="act5.jpg" alt="Forest">
+            <p>Activity 5</p>
+          </div>
+          <div class="card" data-aos="zoom-in" data-target="tutorial6">
+            <img src="act6.jpg" alt="Ocean">
+            <p>Activity 6</p>
+          </div>
+          <div class="card" data-aos="zoom-in" data-target="tutorial7">
+            <img src="act7.jpg" alt="Snow">
+            <p>Activity 7</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="right-side">
+        <div class="moving-image" id="floatingImage">
+          <img src="CSU.jpg" alt="Your Picture" />
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Tutorial Popups -->
+  <div id="tutorial1" class="tutorial-popup">
+  <div class="popup-content">
+    <span class="close-btn">&times;</span>
+    <h2>Activity 1 Tutorial</h2>
+    <p>This HTML file creates a basic personal information page using simple text formatting. It begins with the <code>&lt;!DOCTYPE html&gt;</code> declaration and includes a <code>&lt;head&gt;</code> with a title and a styled button that links back to the main project page.</p>
+
+    <p>Inside the <code>&lt;body&gt;</code>, the user’s autobiography details like name, age, address, birthday, and school are displayed using multiple <code>&lt;p&gt;</code> tags. Each line represents a single piece of information, written in a readable format for quick viewing.</p>
+
+    <p>At the bottom, a "Main Page" button is styled with CSS and links back to <code>sonido8.html</code>. This activity helps reinforce the fundamentals of structuring text content using paragraphs and applying basic CSS styles for layout and navigation.</p>
+
+    <a href="sonido1.html" class="popup-link-btn" target="_blank">Go to Activity</a>
+  </div>
+</div>
+
+
+ 
+<div id="tutorial2" class="tutorial-popup">
+  <div class="popup-content">
+    <span class="close-btn">&times;</span>
+    <h2>Activity 2 Tutorial</h2>
+    <p>This HTML file creates a simple autobiography web page using basic HTML structure. It begins with <code>&lt;!DOCTYPE html&gt;</code> to define it as an HTML5 document. The <code>&lt;html&gt;</code> tag wraps all content, and the <code>&lt;head&gt;</code> includes the <code>&lt;title&gt;</code> for the browser tab and a <code>&lt;style&gt;</code> block that adds design to the button at the bottom.</p>
+
+    <p>Inside the <code>&lt;body&gt;</code>, personal details such as name, age, address, birthday, and school are displayed using <code>&lt;p&gt;</code> tags. Each label is bolded with <code>&lt;b&gt;</code>, and the values are italicized with <code>&lt;i&gt;</code>. The title "AUTOBIOGRAPHY" is centered using the old <code>&lt;center&gt;</code> tag (though modern CSS is preferred).</p>
+
+    <p>At the bottom, there's a "Main Page" button styled with blue color and hover effects. When clicked, it takes the user back to the main project page (<code>sonido8.html</code>). Overall, this activity demonstrates how to present personal data in a clean format using basic HTML and simple styling.</p>
+
+    <a href="sonido2.html" class="popup-link-btn" target="_blank">Go to Activity</a>
+  </div>
+</div>
+
+
+ <div id="tutorial3" class="tutorial-popup">
+  <div class="popup-content">
+    <span class="close-btn">&times;</span>
+    <h2>Activity 3 Tutorial</h2>
+    <p>This HTML file creates an autobiography page that shares a personal story using structured content and basic tags. The page starts with the <code>&lt;!DOCTYPE html&gt;</code> declaration and uses tags like <code>&lt;head&gt;</code> for the title and embedded styles, and <code>&lt;body&gt;</code> for all visible content.</p>
+
+    <p>At the top, it shows basic personal details using <code>&lt;p&gt;</code> tags, and emphasizes labels with <code>&lt;b&gt;</code> and values with <code>&lt;i&gt;</code>. The narrative begins under “MY LIFE” and tells a short story of personal growth using aligned paragraphs (left, right, center, and justify), giving the page a readable and expressive layout.</p>
+
+    <p>The bottom of the page includes a styled “Main Page” button linking to the homepage. Overall, this activity combines storytelling and HTML formatting to practice content structure, text alignment, and linking in a meaningful way.</p>
+
+    <a href="sonido3.html" class="popup-link-btn" target="_blank">Go to Activity</a>
+  </div>
+</div>
+
+
+ <div id="tutorial4" class="tutorial-popup">
+  <div class="popup-content">
+    <span class="close-btn">&times;</span>
+    <h2>Activity 4 Tutorial</h2>
+    <p>This HTML page displays a list of male and female students using ordered and unordered list tags. The structure begins with the <code>&lt;!DOCTYPE html&gt;</code> declaration and includes a basic layout with a <code>&lt;head&gt;</code> section for the title and CSS styling.</p>
+
+    <p>The content is organized into two groups: one using an ordered list (<code>&lt;ol&gt;</code>) to number male student names, and the other using an unordered list (<code>&lt;ul&gt;</code>) to show female names with bullet points. Each name is placed inside a <code>&lt;li&gt;</code> tag to represent list items properly.</p>
+
+    <p>At the bottom, a “Main Page” button is included and styled using CSS. It links back to the homepage (<code>sonido8.html</code>) and features hover effects to improve interactivity. This activity practices how to present categorized data with HTML lists and basic navigation.</p>
+
+    <a href="sonido4.html" class="popup-link-btn" target="_blank">Go to Activity</a>
+  </div>
+</div>
+
+
+ <div id="tutorial5" class="tutorial-popup">
+  <div class="popup-content">
+    <span class="close-btn">&times;</span>
+    <h2>Activity 5 Tutorial</h2>
+    <p>This HTML page displays a table comparing a list of male and female students. It uses the <code>&lt;table&gt;</code> element to structure the data into rows and columns. The first row contains headers labeled "Male" and "Female".</p>
+
+    <p>Inside each table cell, ordered lists (<code>&lt;ol&gt;</code>) are used for male names and unordered lists (<code>&lt;ul&gt;</code>) for female names. Each student name is wrapped in a <code>&lt;li&gt;</code> tag to display as list items. The <code>start</code> attribute in the ordered lists ensures the numbering continues correctly across rows.</p>
+
+    <p>Styling is applied to center the table and add borders using CSS. At the bottom of the page, a styled “Main Page” button is included for navigation back to the homepage (<code>sonido8.html</code>). This activity demonstrates how to organize list-based data inside tables using proper HTML tags and simple formatting.</p>
+
+    <a href="sonido5.html" class="popup-link-btn" target="_blank">Go to Activity</a>
+  </div>
+</div>
+
+  <div id="tutorial6" class="tutorial-popup">
+  <div class="popup-content">
+    <span class="close-btn">&times;</span>
+    <h2>Activity 6 Tutorial</h2>
+    <p>This HTML file creates a personal profile page using a combination of text, tables, and images. It begins with the <code>&lt;!DOCTYPE&gt;</code> declaration and includes a title, although the <code>&lt;title&gt;</code> tag is placed incorrectly and should be inside the <code>&lt;head&gt;</code> tag.</p>
+
+    <p>The main content displays a photo on the upper right using the <code>&lt;img&gt;</code> tag, styled with fixed width and height. Below the image, personal information such as name, age, birthday, and school details are shown using multiple <code>&lt;p&gt;</code> tags, formatted with bold labels and italicized values for clarity.</p>
+
+    <p>A "Main Page" button is included at the bottom, styled using CSS and wrapped in an anchor tag to link back to <code>sonido8.html</code>. This activity demonstrates how to layout personal data visually with basic styling, image insertion, and page navigation.</p>
+
+    <a href="sonido6.html" class="popup-link-btn" target="_blank">Go to Activity</a>
+  </div>
+</div>
+
+
+ <div id="tutorial7" class="tutorial-popup">
+  <div class="popup-content">
+    <span class="close-btn">&times;</span>
+    <h2>Activity 7 Tutorial</h2>
+    <p>This HTML page builds a simple interactive form with various input types. It begins with a standard <code>&lt;form&gt;</code> tag and includes JavaScript to show a “SUBMITTED!” alert and reset the form when submitted.</p>
+
+    <p>The form collects details like name, age, address, birthday, gender (radio buttons), course (dropdown), school, favorite foods (checkboxes), movie selections, and favorite color. It also embeds a playable video and audio file using the <code>&lt;video&gt;</code> and <code>&lt;audio&gt;</code> tags, respectively.</p>
+
+    <p>A "Main Page" button at the bottom links back to <code>sonido8.html</code>. This activity demonstrates the use of form elements, multimedia embedding, color selection, and basic form handling with JavaScript.</p>
+
+    <a href="sonido7.html" class="popup-link-btn" target="_blank">Go to Activity</a>
+  </div>
+</div>
+
+
+   <button id="moduleSelector" class="module-fab">
+    <span>📚</span> View Modules
+  </button>
+
+  <!-- Module Selection Popup -->
+  <div id="modulePopup" class="tutorial-popup">
+    <div class="popup-content">
+      <span class="close-btn">&times;</span>
+      <h2>Select Module Mode</h2>
+      <p>Choose how you want to view the modules:</p>
+      <div style="margin-top: 20px;">
+        <a href="https://drive.google.com/drive/folders/1tBEzKIJ8OxQUBfKyL9Vbt_9fHOajuyP5?usp=sharing"
+           class="popup-link-btn"
+           target="_blank">🌐 Online Mode</a>
+        <button class="popup-link-btn" id="offlineBtn">📁 Offline Mode</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Offline Module Selection Popup -->
+  <div id="offlinePopup" class="tutorial-popup">
+    <div class="popup-content">
+      <span class="close-btn">&times;</span>
+      <h2>Select Module to Download</h2>
+      <p>Choose a specific module to download:</p>
+      <div style="margin-top: 20px; display: flex; flex-direction: column; gap: 10px;">
+        <a href="Module 1.zip" class="popup-link-btn" download>📘 Module 1: Fundamentals</a>
+        <a href="Module 2.zip" class="popup-link-btn" download>📘 Module 2: HTML</a>
+        <a href="Module 3.zip" class="popup-link-btn" download>📘 Module 3: Body Elements</a>
+        <a href="Module 4.zip" class="popup-link-btn" download>📘 Module 4: List</a>
+        <a href="Module 5.zip" class="popup-link-btn" download>📘 Module 5: Tables</a>
+        <a href="Module 6.zip" class="popup-link-btn" download>📘 Module 6: Inserting Image, Video, Audio and Links</a>
+        <a href="Module 7.zip" class="popup-link-btn" download>📘 Module 7: Forms</a>
+        <a href="Module 8.zip" class="popup-link-btn" download>📘 Module 8: CSS</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Floating image effect
+    const image = document.getElementById('floatingImage');
+    document.addEventListener('mousemove', (e) => {
+      const x = (e.clientX / window.innerWidth - 0.5) * 20;
+      const y = (e.clientY / window.innerHeight - 0.5) * 20;
+      image.style.transform = `translate(${x}px, ${y}px)`;
+    });
+
+    // Toggle activity cards
+    const toggleButton = document.getElementById('toggleButton');
+    const activityButtons = document.getElementById('activityButtons');
+    toggleButton.addEventListener('click', () => {
+      activityButtons.classList.toggle('show');
+      if (window.AOS) {
+        setTimeout(() => AOS.refresh(), 100);
+      }
+    });
+
+    // Open tutorial popup on card click
+    document.querySelectorAll('.card').forEach(card => {
+      card.addEventListener('click', () => {
+        const targetId = card.getAttribute('data-target');
+        document.getElementById(targetId).style.display = 'flex';
+      });
+    });
+
+    // Close popup
+    document.querySelectorAll('.close-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        btn.closest('.tutorial-popup').style.display = 'none';
+      });
+    });
+
+    // Optional scroll to trigger animation
+    window.addEventListener("load", () => {
+      window.scrollTo(0, 1);
+    });
+  </script>
+
+
+  <div class="footer">
+    Created by Johncarlo &middot; CSU Final Project &middot; <a href="#">Back to Top</a>
+  </div>
+
+  <script>
+    // Dark mode toggle
+    const toggleDark = document.getElementById('darkModeToggle');
+    toggleDark.addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
+      toggleDark.textContent = document.body.classList.contains('dark-mode') ? '☀️ Light Mode' : '🌙 Dark Mode';
+    });
+  </script>
+
+  <!-- AOS Animation Script -->
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+  <script>
+    AOS.init({ duration: 1000 });
+  </script>
+
+  <script>
+ const moduleBtn = document.getElementById('moduleSelector');
+    const modulePopup = document.getElementById('modulePopup');
+    const offlineBtn = document.getElementById('offlineBtn');
+    const offlinePopup = document.getElementById('offlinePopup');
+
+    moduleBtn.addEventListener('click', () => {
+      modulePopup.style.display = 'flex';
+    });
+
+    offlineBtn.addEventListener('click', () => {
+      modulePopup.style.display = 'none';
+      offlinePopup.style.display = 'flex';
+    });
+
+    window.addEventListener("load", () => {
+  window.scrollTo(0, 1);
+});
+
+// 🛠️ Added missing close button handler for offline popup
+offlinePopup.querySelector('.close-btn').addEventListener('click', () => {
+  offlinePopup.style.display = 'none';
+});
+</script>
+
+
+</body>
+
+</html>

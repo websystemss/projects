@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Activity7 HTML</title>
+  <style>
+    .buttons-container {
+      margin-top: 30px;
+      text-align: center;
+    }
+
+    .buttons-container button {
+      background-color: #4DABF7;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      font-size: 16px;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s;
+    }
+
+    .buttons-container button:hover {
+      background-color: #339af0;
+      transform: scale(1.05);
+    }
+  </style>
+  <script>
+    function handleSubmit(event) {
+      event.preventDefault(); // Prevents page reload
+      alert("SUBMITTED!");
+      event.target.reset(); // Clears all form inputs
+    }
+  </script>
+</head>
+<body>
+ 
+  <form onsubmit="handleSubmit(event)">
+    FIRST NAME:<br>
+    <input type="text" name="firstname"><br><br>
+
+    LAST NAME:<br>
+    <input type="text" name="lastname"><br><br>
+
+    MIDDLE NAME:<br>
+    <input type="text" name="middlename"><br><br>
+
+    AGE:<br>
+    <input type="number" name="age" min="0" value="0"><br><br>
+
+    ADDRESS:<br>
+    <input type="text" name="address"><br><br>
+
+    BIRTHDAY:<br>
+    <input type="date" name="bday" min="2004-12-16"><br><br>
+
+    SEX:<br>
+    <input type="radio" name="gender" value="female">FEMALE<br>
+    <input type="radio" name="gender" value="male">MALE<br><br>
+
+    COURSE:<br>
+    <select name="course">
+      <option value="it">INFORMATION TECHNOLOGY</option>
+      <option value="is">INFORMATION SYSTEM</option>
+      <option value="mma">MULTIMEDIA ARTS</option>
+      <option value="cs">COMPUTER SCIENCE</option>
+      <option value="lib">LIBRARY SCIENCE</option>
+      <option value="pa">PUBLIC ADMINISTRATION</option>
+      <option value="eng">ENGINEERING</option>
+      <option value="arch">ARCHITECTURE</option>
+    </select><br><br>
+
+    SCHOOL:<br>
+    <input type="text" name="school"><br><br>
+
+    FAVORITE FOODS:<br>
+    <input type="checkbox" name="food" value="hatdog">HATDOG<br>
+    <input type="checkbox" name="food" value="itlog">ITLOG<br>
+    <input type="checkbox" name="food" value="spam">SPAM<br>
+    <input type="checkbox" name="food" value="andoks">ANDOKS<br><br>
+
+    MOVIE:<br>
+    <video controls autoplay width="320" height="240">
+      <source src="bidyow.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video><br><br>
+
+    MOVIE SELECTION:<br>
+    <input type="checkbox" name="movie" value="grave">GRAVE OF FIREFLY<br>
+    <input type="checkbox" name="movie" value="darna">DARNA<br>
+    <input type="checkbox" name="movie" value="batang">BATANG QUIAPO<br>
+    <input type="checkbox" name="movie" value="barney">BARNEY<br><br>
+
+    SONG:<br>
+    <audio controls autoplay>
+      <source src="betlog.mp3" type="audio/mp3">
+      Your browser does not support the audio element.
+    </audio><br><br>
+
+    FAVORITE COLOR:<br>
+    <input type="color" name="favorite_color"><br><br>
+
+    <input type="submit" value="SUBMIT">
+  </form>
+
+  <div class="buttons-container">
+    <a href="index.html">
+      <button type="button">Main Page</button>
+    </a>
+  </div>
+</body>
+</html>
